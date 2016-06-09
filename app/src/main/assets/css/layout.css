@@ -1,0 +1,110 @@
+/**
+ * Cpoyright (C) 2016 by Alexander Chen
+ *
+ * This file is part of RPG Soundscape source code
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * RPG Soundscape is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+/**
+ * Change Log
+ *
+ *
+ */
+
+/*
+ * Ensures the background is white or some of the components won't work right
+ */
+body {
+  background: #ffffff
+}
+
+/*
+ * Have to force it, else it goes 0% height and width
+ */
+.audio-player {
+  width: 100%;
+  height: 100%;
+}
+
+button {
+  background-color: Transparent;
+  background-repeat:no-repeat;
+  border: none;
+  cursor:pointer;
+  overflow: hidden;
+  outline:none;
+}
+
+/*
+ * Formats the music and effects player
+ */
+.player {
+  margin: 10px 10px 10px 10px; /* give it some space */
+  height: 90px;
+  width: 98%;
+  min-height: 10px; /* Overrides the default mdl version of 200px */
+}
+
+
+/*
+ * This formats the volume control for webkit browsers.
+ */
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  border-radius: 8px;
+  height: 7px;
+  border: 1px solid #000000;
+  background: #f2f2f2;
+}
+
+/*
+ * This formats the volume control for webkit browsers.
+ *
+ * This isn't what I expected. This formats everything at the back
+ * of the input component, not the track itself.
+ */
+input[type=range]::-webkit-slider-runnable-track {
+  background: transparent; 
+}
+
+/*
+ * This formats the volume control for webkit browsers.
+ */
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background-color: #fdfdfd;
+  border: 1px solid #000000;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.player-button {
+  position: absolute;
+  z-index: -1; /* move it behind the volume control, else it will block it */
+}
+
+/*
+ * Places the volume control next to the play/pause button
+ */
+.player-volume {
+  position: absolute;
+  top: 48px; 
+  left: 70px;
+  width: 300px;
+}
