@@ -68,22 +68,27 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    /*
+    /**
+     * Save the state when sleeping (I think!)
+     *
+     * @param outState
+     */
     @Override
     protected void onSaveInstanceState(Bundle outState )
     {
         super.onSaveInstanceState(outState);
         webView.saveState(outState);
     }
-    */
 
-    /*
-
+    /**
+     * Restores the app (I think!)
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
         webView.restoreState(savedInstanceState);
     }
-    */
 }
