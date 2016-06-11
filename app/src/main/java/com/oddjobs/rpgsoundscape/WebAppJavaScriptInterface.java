@@ -52,46 +52,49 @@ import java.io.IOException;
 public class WebAppJavaScriptInterface
 {
   Context context;
-  DBHandler db;
-  Logger log;
+
+  //DBHandler db;
+  //Logger log;
 
   /** Instantiate the interface and set the context */
   public WebAppJavaScriptInterface(Context c)
   {
     this.context = c;
-    log = new Logger(this.context);
-    db = new DBHandler(this.context, this.log);
+    //log = new Logger(this.context);
+    //db = new DBHandler(this.context, this.log);
   }
 
   /**
    * Opens the database. Use this method to manually open a connection to the database.
    *
    * @return Success or failure to open database
-   */
+
   @JavascriptInterface
   public boolean openDB()
   {
     l("openDB(): Hello!");
     return db.openDatabase();
   }
+  */
 
   /**
    * Closes the active database. Does not check whether a database is open or not.
    *
    * @return Success or failure at closing the database
-   */
+
   @JavascriptInterface
   public boolean closeDB()
   {
     l("closeDB(): Hello!");
     return db.closeDatabase();
   }
+  */
 
   /**
    * <b>DEPRECATED</b> Populate the database with test data.
    *
    * @return Whether populated or not
-   */
+
   @JavascriptInterface
   @Deprecated
   public boolean popDB()
@@ -99,12 +102,13 @@ public class WebAppJavaScriptInterface
     l("popDB(): Hello!");
     return db.populateDatabase();
   }
+  */
 
   /**
    * <b>DEPRECATED</b> Create the database from SQL script.
    *
    * @return
-   */
+
   @JavascriptInterface
   @Deprecated
   public boolean createDB()
@@ -112,19 +116,22 @@ public class WebAppJavaScriptInterface
     l("createDB(): Hello!");
     return db.createDatabase();
   }
+  */
 
+  /*
   @JavascriptInterface
   @Deprecated
   public boolean inData()
   {
     return db.inputDataIntoTables();
   }
+  */
 
   /**
    * Returns a complete list of spells within the database
    *
    * @return A list of spells in JSON format
-   */
+
   @JavascriptInterface
   public String getSpellList()
   {
@@ -180,65 +187,72 @@ public class WebAppJavaScriptInterface
 
     return json.toString();
   }
+  */
 
   /**
    * Delete the database file. Used for debugging only.
    *
    * @return
-   */
+
   @JavascriptInterface
   public boolean delDB()
   {
     return db.deleteDB();
   }
+  */
 
   /**
    * Debug messages to log
    *
    * @param mesg Message to be logged
-   */
+
   @JavascriptInterface
   public void l(String mesg)
   {
     //Log.d("Draginet", mesg);
     log.l(mesg);
   }
+  */
 
   /**
    * Copy the database from the assets folder
-   */
+
   @JavascriptInterface
   public void copyDB()
   {
     db.copyDatabase();
   }
 
+  */
+
   /**
    * Get the current log file
    *
    * @return The log file as String
-   */
+
   @JavascriptInterface
   public String getLogs()
   {
     return log.getLogMessages();
   }
+  */
 
   /**
    * Delete the log file.
-   */
+
   @JavascriptInterface
   public void delLogs()
   {
     log.deleteLog();
   }
+  */
 
   /**
    * Create a new player character spellbook.
    *
-   * @param spellbook_name The name of the spell book
+   * @param //spellbook_name The name of the spell book
    * @return An integer representing the spellbook_bk
-   */
+
   @JavascriptInterface
   public int createSpellbook(String spellbook_name)
   {
@@ -255,9 +269,23 @@ public class WebAppJavaScriptInterface
 
     return spellbook_bk;
   }
+  */
 
+  /*
   public void addSpellsToSpellbook(String json)
   {
 
+  }
+  */
+
+  @JavascriptInterface
+  public <T> void l(T mesg)
+  {
+    if(mesg == null)
+    {
+      Log.d("RPG:", "No message");
+    }else{
+      Log.d("RPG:", (String) mesg);
+    }
   }
 }

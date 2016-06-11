@@ -56,6 +56,10 @@ function music_player_events()
     var playlist = get_playlist(soundtab);
     var song = shuffle(playlist)[0];
 
+    //var data = "Song: "+song+" soundtab: "+soundtab;
+
+    //db.l(data);
+
     p.attr("src",music_location+song.mp3);
     music_name.html(song.title);
     p.trigger("play");

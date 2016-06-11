@@ -49,21 +49,35 @@ public class MainActivity extends AppCompatActivity
         // Enable JavaScript
         settings.setJavaScriptEnabled(true);
 
-        //webView.addJavascriptInterface(new WebAppJavaScriptInterface(this), "db");
+        webView.addJavascriptInterface(new WebAppJavaScriptInterface(this), "db");
 
-        // Supposed to stop it from refreshing the page when the app returns from pause
+        // One of these solved the problem where when I tried to grab the next song from the
+        // playlist, it wouldn't play it. Can't determine what exactly is the source of the
+        // problem. Logcat was no help.
+        settings.setAllowFileAccess(true);
+        settings.setAllowFileAccessFromFileURLs(true);
+        settings.setAllowUniversalAccessFromFileURLs(true);
+        settings.setAllowContentAccess(true);
+        settings.setLoadsImagesAutomatically(true);
+
+        // Supposed to stop it from refreshing the page when the app returns from pause.
+        // Does nothing, but no harm being in there
         if (savedInstanceState == null)
         {
             webView.loadUrl("file:///android_asset/index.html");
         }
     }
 
+    /*
     @Override
     protected void onSaveInstanceState(Bundle outState )
     {
         super.onSaveInstanceState(outState);
         webView.saveState(outState);
     }
+    */
+
+    /*
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState)
@@ -71,4 +85,5 @@ public class MainActivity extends AppCompatActivity
         super.onRestoreInstanceState(savedInstanceState);
         webView.restoreState(savedInstanceState);
     }
+    */
 }
