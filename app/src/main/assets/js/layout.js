@@ -1,5 +1,5 @@
 /**
- * Cpoyright (C) 2016 by Alexander Chen
+ * Copyright (C) 2016 by Alexander Chen
  *
  * This file is part of RPG Soundscape source code
  *
@@ -102,7 +102,7 @@ function add_music_player(playlist) {
     '          </div>'+
     '          <div class="player-volume">'+
     '            <input type="range" min="0" max="100" value="0"><br/>'+
-    '            <audio id="music-player" src="'+music_location+song.mp3+'" type="audio/mpeg"></audio>'+
+    '            <audio id="music-player" controls src="'+music_location+song.mp3+'" type="audio/mpeg"></audio>'+
     '          </div>'+
     '        </div>'+
     '      </div>';

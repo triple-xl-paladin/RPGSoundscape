@@ -1,5 +1,5 @@
 /**
- * Cpoyright (C) 2016 by Alexander Chen
+ * Copyright (C) 2016 by Alexander Chen
  *
  * This file is part of RPG Soundscape source code
  *
@@ -24,14 +24,9 @@
  *
  * This solution feels dirty, but nothing else seems to work.
  */
-function music_player_events()
+
+function get_playlist(soundtab)
 {
-  var music_location = "soundset/fantasy/music/";
-
-  var p = $("#music-player");
-
-  var soundtab = p.closest("section").attr("id");
-  var music_name = $('#song_title');
 
   var playlist = "";
 
@@ -46,9 +41,21 @@ function music_player_events()
     }
   }
 
+  return playlist;
+}
+
+function music_player_events()
+{
+  var p = $("#music-player");
+
   // I should be able to find out which parent this is and get the playlist that way instead of the loop from above.
   p.on('ended', function() {
+    var soundtab = p.closest("section").attr("id");
+    var music_location = "soundset/fantasy/music/";
+    var music_name = $('#song_title');
+    var playlist = get_playlist(soundtab);
     var song = shuffle(playlist)[0];
+
     p.attr("src",music_location+song.mp3);
     music_name.html(song.title);
     p.trigger("play");

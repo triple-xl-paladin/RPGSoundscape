@@ -1,5 +1,5 @@
 /**
- * Cpoyright (C) 2016 by Alexander Chen
+ * Copyright (C) 2016 by Alexander Chen
  *
  * This file is part of RPG Soundscape source code
  *
@@ -54,7 +54,7 @@ button {
 .player {
   margin: 10px 10px 10px 10px; /* give it some space */
   height: 90px;
-  width: 98%;
+  width: 90%;
   min-height: 10px; /* Overrides the default mdl version of 200px */
 }
 
