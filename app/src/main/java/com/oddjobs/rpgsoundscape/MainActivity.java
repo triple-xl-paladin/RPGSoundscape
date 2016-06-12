@@ -64,7 +64,8 @@ public class MainActivity extends AppCompatActivity
         // Does nothing, but no harm being in there
         if (savedInstanceState == null)
         {
-            webView.loadUrl("file:///android_asset/index.html");
+            //webView.loadUrl("file:///android_asset/index.html");
+            webView.loadUrl("file:///android_asset/test.html");
         }
     }
 

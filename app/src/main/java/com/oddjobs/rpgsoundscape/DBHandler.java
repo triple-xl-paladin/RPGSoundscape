@@ -54,7 +54,7 @@ import java.io.OutputStream;
  */
 public class DBHandler
 {
-  String db_name = "draginet10.sqlite";
+  String db_name = "soundscape.db";
   //String db_path = "/data/data/com.oddjob.draginet/databases/";
   String db_path = ""; // Path is determined in constructor from Context
   Context context;
@@ -90,7 +90,8 @@ public class DBHandler
       // Open the database
       boolean open = openDatabase();
       l("Constructor open db: " + String.valueOf(open));
-    } else
+    }
+    else
     {
       // This should only happen on first time initialization of app
       // Copies the database to the files directory
@@ -118,123 +119,11 @@ public class DBHandler
       db = SQLiteDatabase.openDatabase(db_path + "/" + db_name, null, SQLiteDatabase.OPEN_READWRITE);
       l("openDatabase(): Database opened");
       opendbcheck = true;
-    } else
+    }
+    else
       l("openDatabase(): Database already open!");
 
     return opendbcheck;
-  }
-
-  /**
-   * <B>DEPRECATED</B> Create the database. Does not populate the database yet!
-   *
-   * @return True if the database got created.
-   */
-  @Deprecated
-  public boolean createDatabase()
-  {
-    //if(!checkDB()) {
-    db = SQLiteDatabase.openOrCreateDatabase(db_path + "/" + db_name, null);
-    l("createDatabase(): Database created and ready: " + db_path + "/" + db_name);
-    //}
-    //else
-    //l("createDatabase(): Database already exists!");
-
-    return checkDB();
-  }
-
-  /**
-   * <B>DEPRECATED</B> Populates the database
-   *
-   * @return True if successful
-   */
-  @Deprecated
-  public boolean populateDatabase()
-  {
-    boolean create_check = false;
-    boolean input_check = false;
-
-    create_check = createTables();
-
-    if (create_check)
-      input_check = inputDataIntoTables();
-
-    return input_check;
-  }
-
-  /**
-   * <B>DEPRECATED</B> input fixed data into table. Used for debugging.
-   *
-   * @return Success of inserting data into table
-   */
-  @Deprecated
-  public boolean inputDataIntoTables()
-  {
-    boolean check = false;
-
-    l("inputDataIntoTables(): start");
-
-    try
-    {
-      if (db.isOpen())
-      {
-        l("inputDataIntoTables(): db is open");
-        DroidFileHandler dfh = new DroidFileHandler(context, "sql/data.sql");
-        String sql = dfh.readFile();
-        l("inputDataIntoTables(): sql = " + sql);
-
-        l(db.getPath());
-        Cursor tmp = db.rawQuery(sql, null);
-        l("inputDataIntoTables(): check after query = " + String.valueOf(check));
-        l("inputDataIntoTables(): row count = " + String.valueOf(tmp.getCount()));
-        l("inputDataIntoTables(): col count = " + String.valueOf(tmp.getColumnCount()));
-        l("inputDataIntoTables(): col names = " + String.valueOf(tmp.getColumnNames()));
-        l("inputDataIntoTables(): content = " + String.valueOf(tmp.toString()));
-
-        check = true;
-      }
-    }
-    catch (SQLException e)
-    {
-      e.printStackTrace();
-    }
-
-    l("inputDataIntoTables(): end " + String.valueOf(check));
-    return check;
-  }
-
-  /**
-   * <B>DEPRECATED</B> Creates the tables in the database for first run
-   *
-   * @return True if successful
-   */
-  @Deprecated
-  private boolean createTables()
-  {
-    boolean check = false;
-
-    l("createTables(): About to create tables");
-
-    try
-    {
-      if (db.isOpen())
-      {
-        DroidFileHandler dfh = new DroidFileHandler(context, "sql/create.sql");
-        String sql = dfh.readFile();
-
-        l("createTables(): create tables now! " + db.getPath());
-        l("createTables(): create tables now! " + sql);
-        db.execSQL(sql);
-
-        check = true;
-      }
-    }
-    catch (SQLException e)
-    {
-      e.printStackTrace();
-    }
-
-    l("createTables(): check " + check);
-    return check;
   }
 
   /**
@@ -251,13 +140,40 @@ public class DBHandler
       l("closeDatabase(): path " + db.getPath());
       db.close();
       l("closeDatabase(): db closed");
-    } else
+    }
+    else
     {
       check = false;
       l("closeDatabase(): db was never open in the first place");
     }
 
     return check;
+  }
+
+
+  public Cursor executeQuerySQL(String sql)
+  {
+    boolean check = false;
+    Cursor recordSet = null;
+
+    try
+    {
+      if (db.isOpen())
+      {
+        recordSet = db.rawQuery(sql, null);
+        l("executeQuery(): recordset count = " + String.valueOf(recordSet.getCount()));
+
+        check = true;
+      }
+    }
+    catch (SQLException e)
+    {
+      e.printStackTrace();
+    }
+
+    l("executeQuery(): recordset finished " + String.valueOf(check));
+
+    return recordSet;
   }
 
   /**
@@ -416,79 +332,6 @@ public class DBHandler
     }
 
     return recordSet;
-  }
-
-  /**
-   * Inserts ONE row into table. The value of the primary key _id and the bussiness key (bk) are
-   * calculated within the method. These do not need to be pre-defined. Leave the two keys out of
-   * the cols and value arrays.
-   *
-   * Only String, int and float is currently supported
-   *
-   * @param table The table to be inserted into
-   * @param bk Business key
-   * @param s_cols Column headers for values which are in TEXT
-   * @param s_values Valaues which are in TEXT
-   * @param i_cols Column headers for values which are in INTEGER
-   * @param i_values Values which are in INTEGER
-   * @param r_cols Colmn headers for values which are in REAL (float)
-   * @param r_values Values which are in REAL (float)
-   * @return Success or failure of insert
-   */
-  @Deprecated
-  public boolean insertQueryOld(String table, String bk, String [] s_cols, String [] s_values,
-                             String [] i_cols, int [] i_values, String [] r_cols, float [] r_values)
-  {
-    l("insertQuery(): method start");
-
-    boolean insert = false; // Success or failure of insert
-
-    // Don't do anything if no table or business key is defined
-    if(table != null & bk !=null)
-    {
-      ContentValues vals = new ContentValues();
-
-      l("insertQuery(): MAX(_id) from " + table + "=" + String.valueOf(findMaxValue(table, "_id")));
-      // Find and add the next value for _id
-      vals.put("_id", findMaxValue(table, "_id") + 1);
-
-      l("insertQuery(): MAX(" + bk + ") from " + table + "=" + String.valueOf(findMaxValue(table, bk)));
-      // Find and add the next value for the bk column
-      vals.put(bk, findMaxValue(table, bk) + 1);
-
-      // Insert query
-      // Only if s_cols is not null and the array size fo s_cols and s_values are equal
-      vals = addContent(vals,s_cols, s_values);
-
-      // Convert primitive to objects
-      Integer [] int_vals = convertInt(i_values);
-      vals = addContent(vals,i_cols, int_vals);
-
-      // Convert primitive to objects
-      Float [] float_vals = convertFloat(r_values);
-      vals = addContent(vals,r_cols, float_vals);
-
-      // Finally insert into the DB
-      try
-      {
-        if (db.isOpen())
-        {
-          l("insertQuery(): db is open");
-          l("insertQuery(): About to insert data");
-          long rowid = db.insert(table, null, vals);
-          l("insertQuery(): Data inserted in row=" + String.valueOf(rowid));
-
-          insert = true;
-        } else
-          l("insertQuery(): db is not open");
-      }
-      catch (SQLException e)
-      {
-        e.printStackTrace();
-      }
-    }
-    l("insertQuery(): method end");
-    return insert;
   }
 
   /**
