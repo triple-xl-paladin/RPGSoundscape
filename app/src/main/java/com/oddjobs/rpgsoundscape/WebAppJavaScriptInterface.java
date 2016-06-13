@@ -156,7 +156,8 @@ public class WebAppJavaScriptInterface
                 }
                 jsonArray.put(jsonSong);
 
-                json.put(soundscheme, jsonArray);
+                json.put("soundscheme", soundscheme);
+                json.put("song", jsonArray);
 
                 // Apparently you need to close the Cursor to free RAM.
                 recordSet.close();
@@ -240,6 +241,74 @@ public class WebAppJavaScriptInterface
         }
 
         sl("getSoundscapes(): Finished!");
+
+        return json.toString();
+    }
+
+    @JavascriptInterface
+    public String getSoundschemes(String soundscape)
+    {
+        sl("getSoundschemes(): BEGIN!");
+
+        String sql = "    select "+
+                     "      s._id" +
+                     "      ,soundscheme " +
+                     "    from soundscheme s " +
+                     "    inner join soundscapes c on c._id = s.soundscape_id "+
+                     "    where soundscape = '"+soundscape+"'"+
+                     "    order by s._id"+
+                     ";";
+
+        Cursor recordSet = null;
+        JSONObject json = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+
+        sl("getSoundschemes(): Start");
+
+        try {
+
+            sl("getSoundschemes(): About to execute query");
+            recordSet = db.executeQuerySQL(sql);
+
+            if (recordSet != null) {
+                sl("getSoundschemes(): recordset is not null!");
+                sl("getSoundschemes(): recordset col count = " + String.valueOf(recordSet.getColumnCount()));
+                sl("getSoundschemes(): recordset row count = " + String.valueOf(recordSet.getCount()));
+
+                // move cursor to first row
+                recordSet.moveToFirst();
+
+                do
+                {
+
+                    String[] cols = recordSet.getColumnNames();
+
+                    JSONObject jsonSoundscapes = new JSONObject();
+
+                    for (String col : cols)
+                    {
+                        String field = recordSet.getString(recordSet.getColumnIndex(col));
+                        sl(col);
+                        sl(field);
+                        jsonSoundscapes.put(col, field);
+                    }
+                    jsonArray.put(jsonSoundscapes);
+                }
+                while(recordSet.moveToNext());
+
+                json.put("soundscheme", jsonArray);
+
+                // Apparently you need to close the Cursor to free RAM.
+                recordSet.close();
+            }
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+            l(e.getMessage());
+        }
+
+        sl("getSoundschemes(): Finished!");
 
         return json.toString();
     }
