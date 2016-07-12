@@ -18,51 +18,21 @@
  *
  */
 
-/**
- * When the current playing music has ended, the function randomly picks a piece of music from the playlist
- * and plays it.
- *
- * This solution feels dirty, but nothing else seems to work.
- */
-
-function get_playlist(soundtab)
-{
-
-  var playlist = "";
-
-  var soundscheme_num = length(soundset.soundscheme);
-
-  // Get the playlist for the tab the music is currently playing
-  for(a=0;a<soundscheme_num;a++)
-  {
-    if(soundset.soundscheme[a].soundscene == soundtab) 
-    {
-      playlist = soundset.soundscheme[a].music;
-    }
-  }
-
-  return playlist;
-}
 
 function music_player_events()
 {
-  var p = $("#music-player");
+  var p = $(".music-player");
 
-  // I should be able to find out which parent this is and get the playlist that way instead of the loop from above.
   p.on('ended', function() {
-    var soundtab = p.closest("section").attr("id");
+    var soundtab = $(this).prop("id");
     var music_location = "soundset/fantasy/music/";
-    var music_name = $('#song_title');
-    var playlist = get_playlist(soundtab);
-    var song = shuffle(playlist)[0];
+    var music_name = $(this).siblings("span");
+    var song_json = db.getSong(soundtab);
+    var song = JSON.parse(song_json);
 
-    //var data = "Song: "+song+" soundtab: "+soundtab;
-
-    //db.l(data);
-
-    p.attr("src",music_location+song.mp3);
-    music_name.html(song.title);
-    p.trigger("play");
+    $(this).attr("src",music_location+song.song[0].file);
+    music_name.html(song.song[0].title);
+    $(this).trigger("play");
   });
 }
 
@@ -75,8 +45,6 @@ function music_player_events()
  */
 function play_pause_event(item)
 {
-  //alert(item.prop("nodeName"));
-  //alert(item.prop("class"));
   var fade_speed = 1500;
   var u = item.find('input');
   var v = item.find('audio');

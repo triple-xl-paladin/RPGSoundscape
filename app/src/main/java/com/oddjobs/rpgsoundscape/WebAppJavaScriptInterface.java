@@ -107,7 +107,7 @@ public class WebAppJavaScriptInterface
     @JavascriptInterface
     public String getSong(String soundscheme)
     {
-        sl("getSong(): BEGIN!");
+        //sl("getSong(): BEGIN!");
 
         String sql = "    select " +
                      "        title " +
@@ -127,17 +127,17 @@ public class WebAppJavaScriptInterface
         JSONObject json = new JSONObject();
         JSONArray jsonArray = new JSONArray();
 
-        sl("getSong(): Start");
+        //sl("getSong(): Start");
 
         try {
 
-            sl("getSong(): About to execute query");
+            //sl("getSong(): About to execute query");
             recordSet = db.executeQuerySQL(sql);
 
             if (recordSet != null) {
-                sl("getSong(): recordset is not null!");
-                sl("getSong(): recordset col count = " + String.valueOf(recordSet.getColumnCount()));
-                sl("getSong(): recordset row count = " + String.valueOf(recordSet.getCount()));
+                //sl("getSong(): recordset is not null!");
+                //sl("getSong(): recordset col count = " + String.valueOf(recordSet.getColumnCount()));
+                //sl("getSong(): recordset row count = " + String.valueOf(recordSet.getCount()));
 
                 // move cursor to first row
                 recordSet.moveToFirst();
@@ -169,7 +169,7 @@ public class WebAppJavaScriptInterface
             l(e.getMessage());
         }
 
-        sl("getSong(): Finished!");
+        //sl("getSong(): Finished!");
 
         return json.toString();
     }
@@ -177,7 +177,7 @@ public class WebAppJavaScriptInterface
     @JavascriptInterface
     public String getEffects(String soundscheme)
     {
-        sl("getEffects(): BEGIN!");
+        //sl("getEffects(): BEGIN!");
 
         String sql = "    select " +
                 "        title " +
@@ -196,17 +196,17 @@ public class WebAppJavaScriptInterface
         JSONObject json = new JSONObject();
         JSONArray jsonArray = new JSONArray();
 
-        sl("getEffects(): Start");
+        //sl("getEffects(): Start");
 
         try {
 
-            sl("getEffects(): About to execute query");
+            //sl("getEffects(): About to execute query");
             recordSet = db.executeQuerySQL(sql);
 
             if (recordSet != null) {
-                sl("getSong(): recordset is not null!");
-                sl("getSong(): recordset col count = " + String.valueOf(recordSet.getColumnCount()));
-                sl("getSong(): recordset row count = " + String.valueOf(recordSet.getCount()));
+                //sl("getSong(): recordset is not null!");
+                //sl("getSong(): recordset col count = " + String.valueOf(recordSet.getColumnCount()));
+                //sl("getSong(): recordset row count = " + String.valueOf(recordSet.getCount()));
 
                 // move cursor to first row
                 recordSet.moveToFirst();
@@ -241,7 +241,7 @@ public class WebAppJavaScriptInterface
             l(e.getMessage());
         }
 
-        sl("getEffects(): Finished!");
+        //sl("getEffects(): Finished!");
 
         return json.toString();
     }
@@ -253,7 +253,7 @@ public class WebAppJavaScriptInterface
     @JavascriptInterface
     public String getSoundscapes()
     {
-        sl("getSoundscapes(): BEGIN!");
+        //sl("getSoundscapes(): BEGIN!");
 
         String sql = "    select "+
                      "      _id" +
@@ -266,17 +266,17 @@ public class WebAppJavaScriptInterface
         JSONObject json = new JSONObject();
         JSONArray jsonArray = new JSONArray();
 
-        sl("getSoundscapes(): Start");
+        //sl("getSoundscapes(): Start");
 
         try {
 
-            sl("getSoundscapes(): About to execute query");
+            //sl("getSoundscapes(): About to execute query");
             recordSet = db.executeQuerySQL(sql);
 
             if (recordSet != null) {
-                sl("getSoundscapes(): recordset is not null!");
-                sl("getSoundscapes(): recordset col count = " + String.valueOf(recordSet.getColumnCount()));
-                sl("getSoundscapes(): recordset row count = " + String.valueOf(recordSet.getCount()));
+                //sl("getSoundscapes(): recordset is not null!");
+                //sl("getSoundscapes(): recordset col count = " + String.valueOf(recordSet.getColumnCount()));
+                //sl("getSoundscapes(): recordset row count = " + String.valueOf(recordSet.getCount()));
 
                 // move cursor to first row
                 recordSet.moveToFirst();
@@ -311,7 +311,7 @@ public class WebAppJavaScriptInterface
             l(e.getMessage());
         }
 
-        sl("getSoundscapes(): Finished!");
+        //sl("getSoundscapes(): Finished!");
 
         return json.toString();
     }
@@ -319,7 +319,7 @@ public class WebAppJavaScriptInterface
     @JavascriptInterface
     public String getSoundschemes(String soundscape)
     {
-        sl("getSoundschemes(): BEGIN!");
+        //sl("getSoundschemes(): BEGIN!");
 
         String sql = "    select "+
                      "      s._id" +
@@ -334,17 +334,17 @@ public class WebAppJavaScriptInterface
         JSONObject json = new JSONObject();
         JSONArray jsonArray = new JSONArray();
 
-        sl("getSoundschemes(): Start");
+        //sl("getSoundschemes(): Start");
 
         try {
 
-            sl("getSoundschemes(): About to execute query");
+            //sl("getSoundschemes(): About to execute query");
             recordSet = db.executeQuerySQL(sql);
 
             if (recordSet != null) {
-                sl("getSoundschemes(): recordset is not null!");
-                sl("getSoundschemes(): recordset col count = " + String.valueOf(recordSet.getColumnCount()));
-                sl("getSoundschemes(): recordset row count = " + String.valueOf(recordSet.getCount()));
+                //sl("getSoundschemes(): recordset is not null!");
+                //sl("getSoundschemes(): recordset col count = " + String.valueOf(recordSet.getColumnCount()));
+                //sl("getSoundschemes(): recordset row count = " + String.valueOf(recordSet.getCount()));
 
                 // move cursor to first row
                 recordSet.moveToFirst();
@@ -379,7 +379,7 @@ public class WebAppJavaScriptInterface
             l(e.getMessage());
         }
 
-        sl("getSoundschemes(): Finished!");
+        //sl("getSoundschemes(): Finished!");
 
         return json.toString();
     }
@@ -440,11 +440,9 @@ public class WebAppJavaScriptInterface
      * Log message directly to Logcat instead of log file.
      *
      * @param mesg The message to log
-     * @param <T>  Template
      */
     @JavascriptInterface
     public void sl(String mesg)
-    //public <T> void sl(T mesg)
     {
         if (mesg == null)
         {
