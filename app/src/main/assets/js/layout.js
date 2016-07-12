@@ -18,17 +18,6 @@
  *
  */
 
-
-
-// This is temporary
-var soundscape_json = '{"soundscape":"fantasy"}';
-var soundscape = JSON.parse(soundscape_json);
-
-/**
- * Converts the effects list of files into a JSON object.
- */
-var soundset = JSON.parse(soundscheme_json);
-
 /**
  * Shuffles array.
  *
@@ -65,18 +54,20 @@ function length(obj) {
 function add_effects_player(effects_list){
   var effects_location = "soundset/fantasy/effects/";
   var html_out = "";
- 
+
+  db.sl(effects_list);
+
   //alert(length(effects_list));
-  for (y=0; y<length(effects_list); y++) {
+  for (y=0; y<length(effects_list.effect); y++) {
     html_out += '<div class="player mdl-card mdl-shadow--4dp">'+
 		'  <div class="mdl-card__supporting-text mdl-card__border">'+
 		'    <div class="player-button">'+
-                '      Effect: <span>'+effects_list[y].title+'</span><br>'+
+                '      Effect: <span>'+effects_list.effect[y].title+'</span><br>'+
                 '      <button><img src="icons/media-playback-start.svg" height="45px" width="45px"></img></button>'+
 		'    </div>'+
 		'    <div class="player-volume">'+
                 '      <input type="range" min="0" max="100" value="0"><br/>'+
-                '      <audio id="player'+y+'" loop src="'+effects_location+effects_list[y].mp3+'" type="audio/mpeg">'+
+                '      <audio id="player'+y+'" loop src="'+effects_location+effects_list.effect[y].file+'" type="'+effects_list.effect[y].file_type+'">'+
                 '      </audio>'+
 		'    </div>'+
 		'  </div>'+
@@ -89,20 +80,21 @@ function add_effects_player(effects_list){
 /**
  * Adds a music player
  */
-function add_music_player(playlist) {
+function add_music_player(song) {
 
-  var song = shuffle(playlist)[0];
+  //var song = shuffle(playlist)[0];
   var music_location = "soundset/fantasy/music/";
+  db.sl('add music '+song.song[0].title+' '+song.song[0].file+' '+song.song[0].file_type)
   var html_out = 
     '      <div class="player mdl-card mdl-shadow--4dp">'+
     '        <div class="mdl-card__supporting-text mdl-card__border">'+
     '          <div class="player-button">'+
-    '            Music: <span id="song_title">'+song.title+'</span><br/>'+
+    '            Music: <span id="song_title">'+song.song[0].title+'</span><br/>'+
     '            <button><img src="icons/media-playback-start.svg" height="45px" width="45px"></img></button>'+
     '          </div>'+
     '          <div class="player-volume">'+
     '            <input type="range" min="0" max="100" value="0"><br/>'+
-    '            <audio id="music-player" controls src="'+music_location+song.mp3+'" type="audio/mpeg"></audio>'+
+    '            <audio id="music-player" controls src="'+music_location+song.song[0].file+'" type="'+song.song[0].file_type+'"></audio>'+
     '          </div>'+
     '        </div>'+
     '      </div>';
@@ -114,6 +106,20 @@ function add_music_player(playlist) {
  * Build the page
  */
 function build() {
+
+  var soundscape_json = db.getSoundscapes();
+  db.sl("soundscape_json: "+soundscape_json);
+  var soundscape_list = JSON.parse(soundscape_json);
+
+  var soundscape = soundscape_list.soundscapes[0].soundscape;
+
+  /**
+   * Converts the effects list of files into a JSON object.
+   */
+  var soundscheme_json = db.getSoundschemes(soundscape);
+  db.sl(soundscheme_json);
+  var soundset = JSON.parse(soundscheme_json);
+
   // Reference to the tab bar element in the html
   var tab_bar = $("#tab-bar");
   var tab_bar_output = "";
@@ -128,11 +134,21 @@ function build() {
 
   for(x=0; x<soundscheme_num; x++) 
   {
-    var soundscene_name = soundset.soundscheme[x].soundscene;
+    var soundscene_name = soundset.soundscheme[x].soundscheme;
     //alert(soundset.soundscheme[x].music);
-    var soundscene_playlist = soundset.soundscheme[x].music;
-    var soundscene_effects_list = soundset.soundscheme[x].effects;
+    db.sl("scname: "+soundscene_name);
+    var song_json = db.getSong(soundscene_name);
 
+    db.sl("Parse JSON song: "+song_json);
+    var song = JSON.parse(song_json);
+    db.sl("song "+song);
+
+    db.sl("getEffects "+soundscene_name);
+    var effects_json = db.getEffects(soundscene_name);
+    db.sl("getEffects "+effects_json);
+    var soundscene_effects_list = JSON.parse(effects_json);
+
+    db.sl("getEffects "+soundscene_effects_list);
     if(x==0) {
       tab_bar_output = '<a href="#'+soundscene_name+'" class="mdl-layout__tab is-active">'+soundscene_name+'</a>';
       active = is_active;
@@ -144,7 +160,7 @@ function build() {
     page_content_output +=
     '  <section class="mdl-layout__tab-panel '+active+'" id="'+soundscene_name+'">'+
     '    <div class="page-content"><!-- Your content goes here -->'+
-           add_music_player(soundscene_playlist) + add_effects_player(soundscene_effects_list)+
+           add_music_player(song) + add_effects_player(soundscene_effects_list)+
     '    </div>'+
     '  </section>';
   }

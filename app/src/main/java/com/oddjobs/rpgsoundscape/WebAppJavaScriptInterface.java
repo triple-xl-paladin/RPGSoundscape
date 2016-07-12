@@ -174,6 +174,77 @@ public class WebAppJavaScriptInterface
         return json.toString();
     }
 
+    @JavascriptInterface
+    public String getEffects(String soundscheme)
+    {
+        sl("getEffects(): BEGIN!");
+
+        String sql = "    select " +
+                "        title " +
+                "        ,file " +
+                "        ,file_type " +
+                "        ,volume_default " +
+                "     from effects_list m " +
+                "        inner join audio_files a on a._id = m.audio_file_id " +
+                "        inner join file_types t on t._id = a.file_type_id " +
+                "        inner join soundscheme s on s._id = m.soundscheme_id "+
+                "     where " +
+                "        soundscheme = '"+soundscheme+"'"+
+                ";";
+
+        Cursor recordSet = null;
+        JSONObject json = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+
+        sl("getEffects(): Start");
+
+        try {
+
+            sl("getEffects(): About to execute query");
+            recordSet = db.executeQuerySQL(sql);
+
+            if (recordSet != null) {
+                sl("getSong(): recordset is not null!");
+                sl("getSong(): recordset col count = " + String.valueOf(recordSet.getColumnCount()));
+                sl("getSong(): recordset row count = " + String.valueOf(recordSet.getCount()));
+
+                // move cursor to first row
+                recordSet.moveToFirst();
+
+                do
+                {
+
+                    String[] cols = recordSet.getColumnNames();
+
+                    JSONObject jsonSong = new JSONObject();
+
+                    for (String col : cols)
+                    {
+                        String field = recordSet.getString(recordSet.getColumnIndex(col));
+                        sl(col);
+                        sl(field);
+                        jsonSong.put(col, field);
+                    }
+                    jsonArray.put(jsonSong);
+                }while(recordSet.moveToNext());
+
+                json.put("soundscheme", soundscheme);
+                json.put("effect", jsonArray);
+
+                // Apparently you need to close the Cursor to free RAM.
+                recordSet.close();
+            }
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+            l(e.getMessage());
+        }
+
+        sl("getEffects(): Finished!");
+
+        return json.toString();
+    }
     /**
      * Returns available soundscapes
      *
@@ -372,7 +443,8 @@ public class WebAppJavaScriptInterface
      * @param <T>  Template
      */
     @JavascriptInterface
-    public <T> void sl(T mesg)
+    public void sl(String mesg)
+    //public <T> void sl(T mesg)
     {
         if (mesg == null)
         {
